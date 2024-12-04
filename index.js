@@ -19,7 +19,6 @@ When the last drop fell into the carafe, he'd pour the coffee into a mug—not j
 It was more than coffee. It was Philipp's moment of calm before the world demanded its share of his day.
 `;
 
-// Parse the text and extract nouns
 const doc = nlp(text);
 
 const nouns =  [...new Set(doc.match('#Noun').out('array'))];
