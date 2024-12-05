@@ -1,4 +1,5 @@
 const nlp = require('compromise');
+const stopwords = require('stopword');
 
 // Sample text
 const text = `
@@ -21,8 +22,32 @@ It was more than coffee. It was Philipp's moment of calm before the world demand
 
 const doc = nlp(text);
 
-const nouns =  [...new Set(doc.match('#Noun').out('array'))];
-const keywords = doc.nouns().unique().out('array');
+// Function to count words in a case-insensitive manner
+const getFrequencyMap = (words) => {
+  return words.reduce((acc, word) => {
+    const cleanWord = word.toLowerCase().replace(/[^a-zA-Z0-9\s]/g, '');
+    acc[cleanWord] = (acc[cleanWord] || 0) + 1;
+    return acc;
+  }, {});
+};
 
-console.log('Nouns:', nouns);
-console.log('Keywords:', keywords);
+// Extract and process nouns
+let nouns = doc.match('#Noun').out('array');
+nouns = stopwords.removeStopwords(nouns); // Filter out stopwords
+const nounFrequencyMap = getFrequencyMap(nouns);
+const topNouns = Object.entries(nounFrequencyMap)
+  .sort((a, b) => b[1] - a[1])
+  .slice(0, 10);
+
+// Extract and process unique keywords
+const keywords = doc.nouns().unique().out('array');
+const keywordFrequencyMap = getFrequencyMap(keywords);
+const topKeywords = Object.entries(keywordFrequencyMap)
+  .sort((a, b) => b[1] - a[1])
+  .slice(0, 10);
+
+console.log('Top 10 Most Frequent Nouns:', topNouns);
+console.log('Top 10 Unique Keywords:', topKeywords);
+
+
+

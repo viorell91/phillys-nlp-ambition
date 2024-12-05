@@ -10,6 +10,7 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
-    "compromise": "^14.14.3"
+    "compromise": "^14.14.3",
+    "stopword": "^3.1.2"
   }
 }
